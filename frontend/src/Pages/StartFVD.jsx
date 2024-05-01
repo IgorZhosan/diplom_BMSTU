@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Button, Modal, Spin, message } from "antd";
+import React, { useContext, useState } from "react";
+import { Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { PatientContext } from "./PatientContext";
 
 const StartFVD = () => {
+  const { addAnalysisResult } = useContext(PatientContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -10,22 +12,25 @@ const StartFVD = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      const result = {
+        date: new Date().toISOString(),
+        data: {
+          ЖЕЛ: Math.random() * 2 + 4, // Генерация случайного значения
+          ФЖЕЛ: Math.random() * 1 + 3,
+          ОФВ1: Math.random() * 1 + 2,
+          ПСВ: Math.random() * 2 + 5,
+        },
+      };
+      addAnalysisResult(result);
       message.success("Анализ ФВД завершен");
-      navigate("/main");
+      navigate("/analysis");
     }, 3000);
   };
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
       <Button type="primary" onClick={startAnalysis} disabled={loading}>
-        {loading ? <Spin /> : "Начать анализ ФВД"}
-      </Button>
-      <Button
-        type="primary"
-        onClick={() => navigate("/main")}
-        style={{ marginTop: 20 }}
-      >
-        Вернуть в главное меню
+        Начать анализ ФВД
       </Button>
     </div>
   );
