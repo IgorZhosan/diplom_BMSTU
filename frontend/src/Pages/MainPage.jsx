@@ -1,7 +1,6 @@
-import React from 'react';
-import { Button, Typography, Space } from 'antd';
-import { useNavigate } from 'react-router-dom';
-
+import React from "react";
+import { Button, Typography, Space } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -9,24 +8,39 @@ export default function MainPage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: '50px', maxWidth: '600px', margin: '0 auto' }}>
-      <Title level={1} style={{ textAlign: 'center', color: '#005a8d' }}>Добро пожаловать!</Title>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Button type="primary" size="large" block onClick={() => navigate('/analysis')}>
-          Analysis
+    <div style={{ padding: "50px", maxWidth: "600px", margin: "0 auto" }}>
+      <Title level={1} style={{ textAlign: "center", color: "#005a8d" }}>
+        Добро пожаловать!
+      </Title>
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Button
+          type="primary"
+          size="large"
+          block
+          onClick={() => navigate("/analysis")}
+        >
+          Анализы
         </Button>
-        <Button type="primary" size="large" block onClick={() => navigate('/start_fvd')}>
-          Start FVD
+        <Button
+          type="primary"
+          size="large"
+          block
+          onClick={() => navigate("/start_fvd")}
+        >
+          Начать диагностику
         </Button>
-        <Button type="primary" size="large" block onClick={() => navigate('/patient')}>
-          Patient
+        <Button
+          type="primary"
+          size="large"
+          block
+          onClick={() => navigate("/patient")}
+        >
+          Информация о пациенте
         </Button>
       </Space>
     </div>
   );
 }
-
-
 
 // import React from "react";
 // import { Button, Space, Row, Col, Typography, Divider } from "antd";
