@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "antd": "^5.16.5",
+    "vite-plugin-imp": "^2.4.0"
+  }
+}
