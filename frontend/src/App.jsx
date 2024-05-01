@@ -1,25 +1,31 @@
 import React from "react";
-import StartFVD from "./Pages/StartFVD";
-import Analysis from "./Pages/Analysis";
-import Patient from "./Pages/Patient";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { PatientProvider } from "./Pages/PatientContext"; // Обновлённый путь
+import PatientForm from "./Pages/PatientForm";
+import PatientInfo from "./Pages/PatientInfo";
 import MainPage from "./Pages/MainPage";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./AuthProvider";
+import Analysis from "./Pages/Analysis";
+import StartFVD from "./Pages/StartFVD";
 
 const App = () => {
   return (
-    <AuthProvider>
+    <PatientProvider>
       <Router>
         <Routes>
-          {/* <Route path="/login" element={<LogInPage />}></Route>
-          <Route path="/register" element={<RegisterPage />}></Route> */}
-          <Route path="/" element={<MainPage />} />
-          <Route path="/start_fvd" element={<StartFVD />} />
+          <Route path="/" element={<Navigate replace to="/form" />} />
+          <Route path="/form" element={<PatientForm />} />
+          <Route path="/main" element={<MainPage />} />
           <Route path="/analysis" element={<Analysis />} />
-          <Route path="/patient" element={<Patient />} />
+          <Route path="/start_fvd" element={<StartFVD />} />
+          <Route path="/patient" element={<PatientInfo />} />
         </Routes>
       </Router>
-    </AuthProvider>
+    </PatientProvider>
   );
 };
 

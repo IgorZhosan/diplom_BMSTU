@@ -9,6 +9,7 @@ import {
   Tooltip,
   AreaChart,
   Area,
+  ResponsiveContainer,
 } from "recharts";
 
 const { Title, Text } = Typography;
@@ -17,16 +18,16 @@ const Analysis = () => {
   const [fvdData, setFvdData] = useState([]);
 
   useEffect(() => {
-    // Симулируем получение данных
-    setFvdData([
-      { time: 0, flow: 0, volume: 0 },
-      { time: 1, flow: 10, volume: 10 },
-      { time: 2, flow: 15, volume: 15 },
-      { time: 3, flow: 5, volume: 20 },
-      { time: 4, flow: -5, volume: 15 },
-      { time: 5, flow: -10, volume: 5 },
-      { time: 6, flow: -15, volume: 0 },
-    ]);
+    // Симулируем получение данных форсированного выдоха
+    const data = [];
+    let volume = 0;
+    for (let i = 0; i <= 6; i++) {
+      const time = i;
+      const flow = i < 3 ? 10 * i : 10 * (6 - i); // Пиковый поток на середине выдоха
+      volume += flow; // Накопление объема
+      data.push({ time, flow, volume });
+    }
+    setFvdData(data);
   }, []);
 
   const parameters = [
@@ -75,54 +76,42 @@ const Analysis = () => {
       <Title level={2}>Результаты анализа ФВД</Title>
       <Table columns={columns} dataSource={parameters} pagination={false} />
       <Divider />
-      <AreaChart
-        width={730}
-        height={250}
-        data={fvdData}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-      >
-        <defs>
-          <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <XAxis dataKey="time" />
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-        <Area
-          type="monotone"
-          dataKey="volume"
-          stroke="#8884d8"
-          fillOpacity={1}
-          fill="url(#colorVolume)"
-        />
-      </AreaChart>
-      <LineChart
-        width={730}
-        height={250}
-        data={fvdData}
-        margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="time" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="flow" stroke="#82ca9d" />
-      </LineChart>
-      <LineChart
-        width={730}
-        height={250}
-        data={fvdData}
-        margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="volume" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="flow" stroke="#ca82d9" />
-      </LineChart>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart
+          data={fvdData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="time" name="Время, сек" />
+          <YAxis dataKey="volume" name="Объём, л" />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Area
+            type="monotone"
+            dataKey="volume"
+            stroke="#8884d8"
+            fillOpacity={1}
+            fill="url(#colorVolume)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart
+          data={fvdData}
+          margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="time" name="Время, сек" />
+          <YAxis dataKey="flow" name="Поток, л/сек" />
+          <Tooltip />
+          <Line type="monotone" dataKey="flow" stroke="#82ca9d" />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
