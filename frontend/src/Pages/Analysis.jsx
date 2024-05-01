@@ -1,51 +1,92 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Divider, Table } from "antd";
+import React, { useState, useEffect } from "react";
+import { Typography, Divider, Button, Table } from "antd";
 import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
   LineChart,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  AreaChart,
-  Area,
-  ResponsiveContainer,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Analysis = () => {
+  const navigate = useNavigate();
   const [fvdData, setFvdData] = useState([]);
+  const [parameters, setParameters] = useState([]);
 
   useEffect(() => {
-    // Симулируем получение данных форсированного выдоха
+    // Симулируем получение данных для анализа форсированного выдоха
     const data = [];
     let volume = 0;
     for (let i = 0; i <= 6; i++) {
       const time = i;
-      const flow = i < 3 ? 10 * i : 10 * (6 - i); // Пиковый поток на середине выдоха
-      volume += flow; // Накопление объема
+      const flow = i < 3 ? 10 * i : 10 * (6 - i);
+      volume += flow;
       data.push({ time, flow, volume });
     }
     setFvdData(data);
+
+    // Данные параметров для таблицы
+    setParameters([
+      {
+        key: "1",
+        parameter: "Жизненная емкость легких (ЖЕЛ)",
+        value: 5.5,
+        normalRange: "4.8 - 6.1 л",
+      },
+      {
+        key: "2",
+        parameter: "Форсированная жизненная емкость (ФЖЕЛ)",
+        value: 4.5,
+        normalRange: "3.9 - 4.9 л",
+      },
+      {
+        key: "3",
+        parameter: "Объем форсированного выдоха за первую секунду (ОФВ1)",
+        value: 3.2,
+        normalRange: "2.5 - 3.5 л",
+      },
+      {
+        key: "4",
+        parameter: "Пиковая скорость выдоха (ПСВ)",
+        value: 7.0,
+        normalRange: "5.5 - 7.5 л/с",
+      },
+      {
+        key: "5",
+        parameter:
+          "Максимальная мгновенная скорость выдоха при 25% ФЖЕЛ (МОС25)",
+        value: 3.2,
+        normalRange: "2.0 - 3.4 л/с",
+      },
+      {
+        key: "6",
+        parameter:
+          "Максимальная мгновенная скорость выдоха при 50% ФЖЕЛ (МОС50)",
+        value: 4.0,
+        normalRange: "3.2 - 4.8 л/с",
+      },
+      {
+        key: "7",
+        parameter:
+          "Максимальная мгновенная скорость выдоха при 75% ФЖЕЛ (МОС75)",
+        value: 2.5,
+        normalRange: "1.8 - 2.8 л/с",
+      },
+      {
+        key: "8",
+        parameter: "Средняя скорость выдоха (СОС)",
+        value: 6.0,
+        normalRange: "4.5 - 6.5 л/с",
+      },
+    ]);
   }, []);
-
-  const parameters = [
-    { key: "1", parameter: "ЖЕЛ", value: 5.5, normalRange: [4.8, 6.1] },
-    { key: "2", parameter: "ФЖЕЛ", value: 4.5, normalRange: [3.9, 4.9] },
-    { key: "3", parameter: "ОФВ1", value: 3.2, normalRange: [2.5, 3.5] },
-    { key: "4", parameter: "ПОС", value: 7.0, normalRange: [5.5, 7.5] },
-    { key: "5", parameter: "МОС25", value: 3.2, normalRange: [2.0, 3.4] },
-    { key: "6", parameter: "МОС50", value: 4.0, normalRange: [3.2, 4.8] },
-    { key: "7", parameter: "МОС75", value: 2.5, normalRange: [1.8, 2.8] },
-    { key: "8", parameter: "СОС", value: 6.0, normalRange: [4.5, 6.5] },
-  ];
-
-  const getColor = (value, normalRange) => {
-    if (value < normalRange[0]) return "#ffa39e"; // Red
-    if (value > normalRange[1]) return "#ffec3d"; // Yellow
-    return "#b7eb8f"; // Green
-  };
 
   const columns = [
     {
@@ -57,17 +98,11 @@ const Analysis = () => {
       title: "Значение",
       dataIndex: "value",
       key: "value",
-      render: (text, record) => (
-        <Text style={{ color: getColor(record.value, record.normalRange) }}>
-          {text}
-        </Text>
-      ),
     },
     {
       title: "Норма",
       dataIndex: "normalRange",
       key: "normalRange",
-      render: (text) => `${text[0]} - ${text[1]}`,
     },
   ];
 
@@ -87,31 +122,38 @@ const Analysis = () => {
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="time" name="Время, сек" />
-          <YAxis dataKey="volume" name="Объём, л" />
           <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="time" />
+          <YAxis />
           <Tooltip />
           <Area
             type="monotone"
             dataKey="volume"
             stroke="#8884d8"
-            fillOpacity={1}
             fill="url(#colorVolume)"
           />
         </AreaChart>
       </ResponsiveContainer>
+      <Divider />
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={fvdData}
           margin={{ top: 30, right: 30, left: 0, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" name="Время, сек" />
-          <YAxis dataKey="flow" name="Поток, л/сек" />
+          <XAxis dataKey="time" />
+          <YAxis />
           <Tooltip />
           <Line type="monotone" dataKey="flow" stroke="#82ca9d" />
         </LineChart>
       </ResponsiveContainer>
+      <Button
+        type="primary"
+        onClick={() => navigate("/main")}
+        style={{ marginTop: 20 }}
+      >
+        Вернуть в главное меню
+      </Button>
     </div>
   );
 };

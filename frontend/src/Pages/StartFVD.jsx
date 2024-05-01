@@ -3,16 +3,16 @@ import { Button, Modal, Spin, message } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const StartFVD = () => {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const startAnalysis = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       message.success("Анализ ФВД завершен");
-      navigate("/");
-    }, 3000); // Имитация загрузки анализа длится 3 секунды
+      navigate("/main");
+    }, 3000);
   };
 
   return (
@@ -20,18 +20,13 @@ const StartFVD = () => {
       <Button type="primary" onClick={startAnalysis} disabled={loading}>
         {loading ? <Spin /> : "Начать анализ ФВД"}
       </Button>
-      <Modal
-        title="Инструкция по анализу ФВД"
-        visible={loading}
-        footer={null}
-        onCancel={() => setLoading(false)}
+      <Button
+        type="primary"
+        onClick={() => navigate("/main")}
+        style={{ marginTop: 20 }}
       >
-        <p>
-          Перед началом анализа убедитесь, что сидите ровно, расслаблены, ноги
-          не перекрещены.
-        </p>
-        <p>Прибор для измерения должен быть строго горизонтально удерживаем.</p>
-      </Modal>
+        Вернуть в главное меню
+      </Button>
     </div>
   );
 };
