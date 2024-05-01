@@ -55,6 +55,18 @@ const Analysis = () => {
     );
   }
 
+  const renderMedicalAdvice = (itemData) => {
+    const medicalAdvice = getMedicalAdvice(itemData);
+    if (medicalAdvice) {
+      return (
+        <Paragraph>
+          <Text type="danger">{medicalAdvice}</Text>
+        </Paragraph>
+      );
+    }
+    return null;
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <Title level={2}>История анализов ФВД</Title>
@@ -67,7 +79,7 @@ const Analysis = () => {
             <List
               dataSource={Object.entries(item.data)}
               renderItem={([key, value]) => (
-                <List.Item>
+                <List.Item key={key}>
                   <Text strong>{key}:</Text>{" "}
                   <Text style={{ color: getColor(value, getNormalRange(key)) }}>
                     {value.toFixed(2)}
@@ -75,6 +87,7 @@ const Analysis = () => {
                 </List.Item>
               )}
             />
+            {renderMedicalAdvice(item.data)}
             <ResponsiveContainer width="100%" height={400}>
               <ComposedChart data={chartData}>
                 <CartesianGrid stroke="#f5f5f5" />
@@ -183,6 +196,22 @@ function getColor(value, normalRange) {
   if (value < normalRange[0]) return "#ffa39e"; // Красный
   if (value > normalRange[1]) return "#ffec3d"; // Желтый
   return "#b7eb8f"; // Зеленый
+}
+
+function getMedicalAdvice(data) {
+  // Пример функции, которая анализирует медицинские данные и возвращает советы
+  const keys = Object.keys(data);
+  for (let key of keys) {
+    const value = data[key];
+    const normalRange = getNormalRange(key);
+    if (value < normalRange[0]) {
+      return `Повышено значение параметра ${key}`;
+    }
+    if (value > normalRange[1]) {
+      return `Понижено значение параметра ${key}`;
+    }
+  }
+  return null;
 }
 
 export default Analysis;
