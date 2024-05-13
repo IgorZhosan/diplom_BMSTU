@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import { AuthProvider } from "../AuthProvider";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -9,23 +8,15 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login } = useContext(AuthContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (await login(formData.email, formData.password)) {
-        navigate("/main");
-      } else {
-        alert("Неправильный email или пароль");
-      }
-    } catch (error) {
-      alert("Ошибка входа: " + error.message);
-    }
+  const handleSubmit = () => {
+    // Просто переход на страницу "/main" без аутентификации
+    navigate("/main");
   };
 
   return (

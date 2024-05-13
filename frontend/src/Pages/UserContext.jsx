@@ -11,6 +11,7 @@ export const UserProvider = ({ children }) => {
     setUsers((prevUsers) => [...prevUsers, userData]);
     console.log("Сохранённые данные пользователей:", users);
   };
+  
 
   return (
     <UserContext.Provider value={{ users, registerUser }}>

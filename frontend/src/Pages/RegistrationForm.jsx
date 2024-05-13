@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Form, Input, Button, Select, message } from 'antd';
-import { UserContext } from './UserContext'; // Предполагается, что контекст уже создан
+import { UserContext } from './UserContext'; 
 
 const { Option } = Select;
 
@@ -25,7 +25,6 @@ const RegistrationForm = () => {
   };
 
   const handleSubmit = () => {
-    // Проверка на заполнение обязательных полей
     if (!formData.fullName || !formData.email || !formData.password) {
       message.error(
         "Пожалуйста, заполните все обязательные поля: ФИО, email и пароль."

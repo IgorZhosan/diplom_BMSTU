@@ -23,7 +23,7 @@ const App = () => {
       <PatientProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<Navigate replace to="/register" />} />
+            <Route path="/" element={<Navigate replace to="/login" />} />
             <Route path="/register" element={<RegistrationForm />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/main" element={<MainPage />} />
