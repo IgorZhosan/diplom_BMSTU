@@ -4,14 +4,19 @@ import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
-export default function MainPage() {
+const MainPage = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
+  const [userLastName, setUserLastName] = useState("");
 
   useEffect(() => {
     const name = localStorage.getItem("name");
+    const lastname = localStorage.getItem("lastname");
     if (name) {
       setUserName(name);
+    }
+    if (lastname) {
+      setUserLastName(lastname);
     }
   }, []);
 
@@ -24,7 +29,7 @@ export default function MainPage() {
       <Row gutter={[16, 16]} align="middle" justify="space-between">
         <Col>
           <Title level={1} style={{ color: "#005a8d" }}>
-            Добро пожаловать{userName && `, ${userName}`}!
+            Добро пожаловать{userName && `, ${userName} ${userLastName}`}!
           </Title>
         </Col>
         <Col>
@@ -61,4 +66,6 @@ export default function MainPage() {
       </Space>
     </div>
   );
-}
+};
+
+export default MainPage;

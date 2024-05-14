@@ -54,6 +54,7 @@ const RegistrationForm = () => {
     localStorage.setItem("login", formData.login);
     localStorage.setItem("password", formData.password);
     localStorage.setItem("name", formData.name);
+    localStorage.setItem("lastname", formData.lastname);
     registerUser({ ...formData });
     message.success("Регистрация прошла успешно!");
     setFormData({
