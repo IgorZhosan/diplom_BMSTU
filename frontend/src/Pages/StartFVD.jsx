@@ -15,7 +15,7 @@ const StartFVD = () => {
       const result = {
         date: new Date().toISOString(),
         data: {
-          ЖЕЛ: Math.random() * 2 + 4, // Генерация случайного значения
+          ЖЕЛ: Math.random() * 2 + 4,
           ФЖЕЛ: Math.random() * 1 + 3,
           ОФВ1: Math.random() * 1 + 2,
           ПСВ: Math.random() * 2 + 5,

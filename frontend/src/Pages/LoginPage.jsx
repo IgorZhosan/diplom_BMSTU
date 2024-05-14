@@ -15,11 +15,14 @@ const LoginPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = () => {
     const storedLogin = localStorage.getItem("login");
     const storedPassword = localStorage.getItem("password");
 
-    if (values.login === storedLogin && values.password === storedPassword) {
+    if (
+      formData.login === storedLogin &&
+      formData.password === storedPassword
+    ) {
       message.success("Вход выполнен успешно!");
       navigate("/main");
     } else {
@@ -74,6 +77,7 @@ const LoginPage = () => {
             {
               required: true,
               message: "Пожалуйста, введите ваш пароль!",
+              min: 6,
             },
           ]}
         >

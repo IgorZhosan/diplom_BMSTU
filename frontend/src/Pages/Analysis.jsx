@@ -199,16 +199,15 @@ function getColor(value, normalRange) {
 }
 
 function getMedicalAdvice(data) {
-  // Пример функции, которая анализирует медицинские данные и возвращает советы
   const keys = Object.keys(data);
   for (let key of keys) {
     const value = data[key];
     const normalRange = getNormalRange(key);
     if (value < normalRange[0]) {
-      return `Повышено значение параметра ${key}`;
+      return `Понижено значение параметра ${key}`;
     }
     if (value > normalRange[1]) {
-      return `Понижено значение параметра ${key}`;
+      return `Повышено значение параметра ${key}`;
     }
   }
   return null;

@@ -5,21 +5,19 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { UserProvider } from "./Pages/UserContext"; // Подключаем контекст пользователей
+import { UserProvider } from "./Pages/UserContext";
 import { PatientProvider } from "./Pages/PatientContext";
 import PatientForm from "./Pages/PatientForm";
 import PatientInfo from "./Pages/PatientInfo";
 import MainPage from "./Pages/MainPage";
 import Analysis from "./Pages/Analysis";
 import StartFVD from "./Pages/StartFVD";
-import RegistrationForm from "./Pages/RegistrationForm"; // Убедитесь, что путь корректный
-import LoginPage from "./Pages/LoginPage"; // Убедитесь, что путь корректный
+import RegistrationForm from "./Pages/RegistrationForm";
+import LoginPage from "./Pages/LoginPage";
 
 const App = () => {
   return (
     <UserProvider>
-      {" "}
-      {/* Обёртка всего приложения в провайдер пользователей */}
       <PatientProvider>
         <Router>
           <Routes>

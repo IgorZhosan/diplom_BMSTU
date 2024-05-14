@@ -50,9 +50,10 @@ const RegistrationForm = () => {
       message.error("Пожалуйста, заполните все обязательные поля.");
       return;
     }
-    // Сохранение логина и пароля в localStorage
+    // Сохранение данных в localStorage
     localStorage.setItem("login", formData.login);
     localStorage.setItem("password", formData.password);
+    localStorage.setItem("name", formData.name);
     registerUser({ ...formData });
     message.success("Регистрация прошла успешно!");
     setFormData({

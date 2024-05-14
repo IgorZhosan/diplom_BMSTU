@@ -9,9 +9,8 @@ const PatientInfo = () => {
   const { patientInfo, setIsFilled } = useContext(PatientContext);
   const navigate = useNavigate();
 
-  // Функция для перехода к форме редактирования данных
   const handleEdit = () => {
-    setIsFilled(false); // Позволяет редактировать данные
+    setIsFilled(false);
     navigate("/form");
   };
 

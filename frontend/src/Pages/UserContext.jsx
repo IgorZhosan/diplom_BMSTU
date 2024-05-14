@@ -5,13 +5,16 @@ export const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(() => {
+    const savedUsers = localStorage.getItem("users");
+    return savedUsers ? JSON.parse(savedUsers) : [];
+  });
 
   const registerUser = (userData) => {
-    setUsers((prevUsers) => [...prevUsers, userData]);
-    console.log("Сохранённые данные пользователей:", users);
+    const newUsers = [...users, userData];
+    setUsers(newUsers);
+    localStorage.setItem("users", JSON.stringify(newUsers));
   };
-  
 
   return (
     <UserContext.Provider value={{ users, registerUser }}>

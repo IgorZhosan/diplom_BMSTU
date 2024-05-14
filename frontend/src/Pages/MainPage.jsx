@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Typography, Space, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export default function MainPage() {
   const navigate = useNavigate();

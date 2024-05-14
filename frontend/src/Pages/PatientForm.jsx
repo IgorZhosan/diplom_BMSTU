@@ -15,20 +15,17 @@ const PatientForm = () => {
     allergies: patientInfo.allergies || "",
   });
 
-  // Эффект для редиректа на главную, если данные уже заполнены
   useEffect(() => {
     if (isFilled) {
       navigate("/main");
     }
   }, [isFilled, navigate]);
 
-  // Обработка изменений в форме
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Обработка отправки формы
   const handleSubmit = () => {
     savePatientInfo(formData);
     navigate("/main");
