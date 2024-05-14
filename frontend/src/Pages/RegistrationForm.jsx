@@ -2,11 +2,13 @@ import React, { useContext, useState } from "react";
 import { Form, Input, Button, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import { PatientContext } from "./PatientContext";
 
 const { Option } = Select;
 
 const RegistrationForm = () => {
   const { registerUser } = useContext(UserContext);
+  const { savePatientInfo } = useContext(PatientContext);
   const navigate = useNavigate();
   const [userType, setUserType] = useState("patient");
   const [form] = Form.useForm();
@@ -55,6 +57,19 @@ const RegistrationForm = () => {
     localStorage.setItem("password", formData.password);
     localStorage.setItem("name", formData.name);
     localStorage.setItem("lastname", formData.lastname);
+
+    // Сохранение данных пациента в контексте
+    if (userType === "patient") {
+      const patientInfo = {
+        fullName: `${formData.name} ${formData.lastname}`,
+        gender: "",
+        snils: formData.policy,
+        allergies: "",
+      };
+      savePatientInfo(patientInfo);
+      localStorage.setItem("patientInfo", JSON.stringify(patientInfo));
+    }
+
     registerUser({ ...formData });
     message.success("Регистрация прошла успешно!");
     setFormData({

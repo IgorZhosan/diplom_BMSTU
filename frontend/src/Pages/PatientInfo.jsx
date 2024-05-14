@@ -6,11 +6,10 @@ import { PatientContext } from "./PatientContext";
 const { Title } = Typography;
 
 const PatientInfo = () => {
-  const { patientInfo, setIsFilled } = useContext(PatientContext);
+  const { patientInfo } = useContext(PatientContext);
   const navigate = useNavigate();
 
   const handleEdit = () => {
-    setIsFilled(false);
     navigate("/form");
   };
 
@@ -31,7 +30,7 @@ const PatientInfo = () => {
         onClick={() => navigate("/main")}
         style={{ marginTop: 20 }}
       >
-        Вернуть в главное меню
+        Вернуться в главное меню
       </Button>
     </div>
   );

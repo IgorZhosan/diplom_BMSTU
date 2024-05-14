@@ -3,21 +3,25 @@ import React, { createContext, useState, useEffect } from "react";
 export const PatientContext = createContext({});
 
 export const PatientProvider = ({ children }) => {
-  const [patientInfo, setPatientInfo] = useState(() => {
-    const savedInfo = localStorage.getItem("patientInfo");
-    return savedInfo
-      ? JSON.parse(savedInfo)
-      : {
-          fullName: "",
-          gender: "",
-          snils: "",
-          allergies: "",
-        };
+  const [patientInfo, setPatientInfo] = useState({
+    fullName: "",
+    gender: "",
+    snils: "",
+    allergies: "",
   });
-  const [analysisHistory, setAnalysisHistory] = useState(() => {
-    const savedHistory = localStorage.getItem("analysisHistory");
-    return savedHistory ? JSON.parse(savedHistory) : [];
-  });
+  const [analysisHistory, setAnalysisHistory] = useState([]);
+
+  useEffect(() => {
+    const storedPatientInfo = localStorage.getItem("patientInfo");
+    if (storedPatientInfo) {
+      setPatientInfo(JSON.parse(storedPatientInfo));
+    }
+
+    const storedAnalysisHistory = localStorage.getItem("analysisHistory");
+    if (storedAnalysisHistory) {
+      setAnalysisHistory(JSON.parse(storedAnalysisHistory));
+    }
+  }, []);
 
   const savePatientInfo = (info) => {
     setPatientInfo(info);

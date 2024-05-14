@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 const PatientForm = () => {
-  const { patientInfo, savePatientInfo, isFilled } = useContext(PatientContext);
+  const { patientInfo, savePatientInfo } = useContext(PatientContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: patientInfo.fullName || "",
@@ -16,19 +16,23 @@ const PatientForm = () => {
   });
 
   useEffect(() => {
-    if (isFilled) {
-      navigate("/main");
+    if (patientInfo) {
+      setFormData(patientInfo);
     }
-  }, [isFilled, navigate]);
+  }, [patientInfo]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleSelectChange = (value) => {
+    setFormData({ ...formData, gender: value });
+  };
+
   const handleSubmit = () => {
     savePatientInfo(formData);
-    navigate("/main");
+    navigate("/patient");
   };
 
   return (
@@ -44,7 +48,7 @@ const PatientForm = () => {
         <Select
           value={formData.gender}
           name="gender"
-          onChange={(value) => setFormData({ ...formData, gender: value })}
+          onChange={handleSelectChange}
         >
           <Option value="Мужской">Мужской</Option>
           <Option value="Женский">Женский</Option>

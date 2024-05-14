@@ -1,5 +1,13 @@
-import React, { useContext } from "react";
-import { Typography, Collapse, Button, List, Empty } from "antd";
+import React, { useContext, useMemo } from "react";
+import {
+  Typography,
+  Divider,
+  Collapse,
+  Button,
+  List,
+  Empty,
+  message,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { PatientContext } from "./PatientContext";
 import {
@@ -21,17 +29,23 @@ const Analysis = () => {
   const { analysisHistory } = useContext(PatientContext);
   const navigate = useNavigate();
 
-  const generateChartData = (itemData) => {
+  const generateChartData = () => {
     let data = [];
     for (let i = 0; i <= 100; i++) {
       const time = i / 10;
       const expVolume = Math.exp(-time / 2) * 20 * Math.sin(time);
       const flowRate =
         -Math.exp(-time / 2) * (2 * Math.sin(time) + (20 * Math.cos(time)) / 2);
-      data.push({ time, expVolume, flowRate });
+      const MOS25 = expVolume * 0.25;
+      const MOS50 = expVolume * 0.5;
+      const MOS75 = expVolume * 0.75;
+      const SOC = flowRate * 1.5; // Примерная формула для СОС
+      data.push({ time, expVolume, flowRate, MOS25, MOS50, MOS75, SOC });
     }
     return data;
   };
+
+  const chartData = useMemo(() => generateChartData(), []);
 
   if (analysisHistory.length === 0) {
     return (
@@ -43,7 +57,7 @@ const Analysis = () => {
           onClick={() => navigate("/main")}
           style={{ marginTop: 20 }}
         >
-          Вернуть в главное меню
+          Вернуться в главное меню
         </Button>
       </div>
     );
@@ -76,14 +90,14 @@ const Analysis = () => {
                 <List.Item key={key}>
                   <Text strong>{key}:</Text>{" "}
                   <Text style={{ color: getColor(value, getNormalRange(key)) }}>
-                    {value.toFixed(2)}
+                    {typeof value === "number" ? value.toFixed(2) : value}
                   </Text>
                 </List.Item>
               )}
             />
             {renderMedicalAdvice(item.data)}
             <ResponsiveContainer width="100%" height={400}>
-              <ComposedChart data={generateChartData(item.data)}>
+              <ComposedChart data={chartData}>
                 <CartesianGrid stroke="#f5f5f5" />
                 <XAxis
                   dataKey="time"
@@ -129,6 +143,34 @@ const Analysis = () => {
                   stroke="#82ca9d"
                   name="Скорость потока"
                 />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="MOS25"
+                  stroke="#ffc658"
+                  name="МОС25"
+                />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="MOS50"
+                  stroke="#ff8042"
+                  name="МОС50"
+                />
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="MOS75"
+                  stroke="#fa8072"
+                  name="МОС75"
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="SOC"
+                  stroke="#4661EE"
+                  name="СОС"
+                />
               </ComposedChart>
             </ResponsiveContainer>
           </Panel>
@@ -139,7 +181,7 @@ const Analysis = () => {
         onClick={() => navigate("/main")}
         style={{ marginTop: 20 }}
       >
-        Вернуть в главное меню
+        Вернуться в главное меню
       </Button>
     </div>
   );
@@ -147,16 +189,16 @@ const Analysis = () => {
 
 function getNormalRange(parameter) {
   const ranges = {
-    FVC: [3.0, 5.0],
-    FEVL: [2.5, 4.0],
-    PEF: [4.0, 10.0],
-    ELA: [1.5, 3.5],
-    FEW25: [2.0, 4.0],
-    FEW50: [2.5, 5.0],
-    FEW75: [3.0, 6.0],
-    FET: [1.0, 3.0],
-    EVol: [1.0, 4.0],
-    FIVc: [2.0, 4.5],
+    FVC: [2.5, 5.0],
+    FEVL: [1.0, 3.0],
+    PEF: [2.5, 7.5],
+    ELA: [1.0, 3.0],
+    FEW25: [1.0, 4.0],
+    FEW50: [1.0, 4.0],
+    FEW75: [0.5, 3.0],
+    FET: [1.0, 3.5],
+    EVOl: [1.0, 4.0],
+    FIVc: [1.0, 4.0],
   };
   return ranges[parameter] || [0, 100];
 }
@@ -173,10 +215,10 @@ function getMedicalAdvice(data) {
     const value = data[key];
     const normalRange = getNormalRange(key);
     if (value < normalRange[0]) {
-      return `Понижено значение параметра ${key}`;
+      return `Значение параметра ${key} ниже нормы`;
     }
     if (value > normalRange[1]) {
-      return `Повышено значение параметра ${key}`;
+      return `Значение параметра ${key} выше нормы`;
     }
   }
   return null;
