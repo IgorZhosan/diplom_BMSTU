@@ -14,6 +14,11 @@ import Analysis from "./Pages/Analysis";
 import StartFVD from "./Pages/StartFVD";
 import RegistrationForm from "./Pages/RegistrationForm";
 import LoginPage from "./Pages/LoginPage";
+import DoctorPage from "./Pages/DoctorPage";
+import ViewMedicalHistory from "./Pages/ViewMedicalHistory";
+import EditMedicalHistory from "./Pages/EditMedicalHistory";
+import AssignSpirometry from "./Pages/AssignSpirometry";
+import ViewFVDResults from "./Pages/ViewFVDResults";
 
 const App = () => {
   return (
@@ -29,6 +34,17 @@ const App = () => {
             <Route path="/patient" element={<PatientInfo />} />
             <Route path="/analysis" element={<Analysis />} />
             <Route path="/start_fvd" element={<StartFVD />} />
+            <Route path="/doctor" element={<DoctorPage />} />
+            <Route
+              path="/view-medical-history"
+              element={<ViewMedicalHistory />}
+            />
+            <Route
+              path="/edit-medical-history"
+              element={<EditMedicalHistory />}
+            />
+            <Route path="/assign-spirometry" element={<AssignSpirometry />} />
+            <Route path="/view-fvd-results" element={<ViewFVDResults />} />
           </Routes>
         </Router>
       </PatientProvider>
