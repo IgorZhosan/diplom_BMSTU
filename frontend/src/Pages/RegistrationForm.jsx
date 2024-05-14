@@ -1,22 +1,26 @@
-import React, { useContext, useState } from 'react';
-import { Form, Input, Button, Select, message } from 'antd';
-import { UserContext } from './UserContext'; 
+import React, { useContext, useState } from "react";
+import { Form, Input, Button, Select, message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 const { Option } = Select;
 
 const RegistrationForm = () => {
   const { registerUser } = useContext(UserContext);
+  const navigate = useNavigate();
   const [userType, setUserType] = useState("patient");
+  const [form] = Form.useForm();
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    login: "",
-    specialty: "",
-    allergies: "",
+    name: "",
+    lastname: "",
+    role: "patient",
+    speciality: "",
+    experience: "",
+    specialization: "",
     age: "",
-    weight: "",
-    height: "",
+    policy: "",
+    login: "",
+    password: "",
   });
 
   const handleInputChange = (e) => {
@@ -24,155 +28,227 @@ const RegistrationForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleRoleChange = (value) => {
+    setUserType(value);
+    setFormData((prev) => ({ ...prev, role: value }));
+    form.setFieldsValue({ role: value });
+  };
+
   const handleSubmit = () => {
-    if (!formData.fullName || !formData.email || !formData.password) {
-      message.error(
-        "Пожалуйста, заполните все обязательные поля: ФИО, email и пароль."
-      );
+    if (
+      !formData.name ||
+      !formData.lastname ||
+      !formData.role ||
+      !formData.login ||
+      !formData.password ||
+      (userType === "doctor" &&
+        (!formData.speciality ||
+          !formData.experience ||
+          !formData.specialization)) ||
+      (userType === "patient" && (!formData.age || !formData.policy))
+    ) {
+      message.error("Пожалуйста, заполните все обязательные поля.");
       return;
     }
-    registerUser({ ...formData, userType });
+    // Сохранение логина и пароля в localStorage
+    localStorage.setItem("login", formData.login);
+    localStorage.setItem("password", formData.password);
+    registerUser({ ...formData });
     message.success("Регистрация прошла успешно!");
     setFormData({
-      // Сброс полей формы после успешной регистрации
-      fullName: "",
-      email: "",
-      password: "",
-      login: "",
-      specialty: "",
-      allergies: "",
+      name: "",
+      lastname: "",
+      role: "patient",
+      speciality: "",
+      experience: "",
+      specialization: "",
       age: "",
-      weight: "",
-      height: "",
+      policy: "",
+      login: "",
+      password: "",
     });
+    navigate("/login");
   };
 
   return (
-    <Form layout="vertical" onFinish={handleSubmit}>
-      <Form.Item
-        label="Тип пользователя"
-        name="userType"
-        rules={[{ required: true, message: "Выберите тип пользователя!" }]}
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "0 auto",
+        padding: "20px",
+        fontFamily: "Arial, sans-serif",
+        border: "1px solid #ccc",
+        borderRadius: "10px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <h2
+        style={{ textAlign: "center", marginBottom: "40px", fontSize: "32px" }}
       >
-        <Select
-          defaultValue="patient"
-          onChange={(value) => {
-            setUserType(value);
-            setFormData((prev) => ({ ...prev, userType: value })); // Обновление типа пользователя в состоянии
-          }}
+        Регистрация
+      </h2>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        style={{ fontSize: "20px" }}
+        initialValues={{ role: "patient" }}
+      >
+        <Form.Item
+          label={<span style={{ fontSize: "20px" }}>Роль</span>}
+          name="role"
+          rules={[{ required: true, message: "Выберите роль пользователя!" }]}
         >
-          <Option value="doctor">Врач</Option>
-          <Option value="patient">Пациент</Option>
-        </Select>
-      </Form.Item>
-      <Form.Item
-        label="ФИО"
-        name="fullName"
-        rules={[{ required: true, message: "Введите ваше ФИО!" }]}
-      >
-        <Input
-          onChange={handleInputChange}
-          name="fullName"
-          value={formData.fullName}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Электронная почта"
-        name="email"
-        rules={[
-          {
-            required: true,
-            type: "email",
-            message: "Введите корректный email!",
-          },
-        ]}
-      >
-        <Input
-          onChange={handleInputChange}
-          name="email"
-          value={formData.email}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Пароль"
-        name="password"
-        rules={[{ required: true, message: "Введите пароль!" }]}
-      >
-        <Input.Password
-          onChange={handleInputChange}
-          name="password"
-          value={formData.password}
-        />
-      </Form.Item>
-      {userType === "doctor" && (
-        <>
-          <Form.Item
-            label="Логин"
+          <Select onChange={handleRoleChange} style={{ fontSize: "20px" }}>
+            <Option value="doctor" style={{ fontSize: "20px" }}>
+              Врач
+            </Option>
+            <Option value="patient" style={{ fontSize: "20px" }}>
+              Пациент
+            </Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label={<span style={{ fontSize: "20px" }}>Имя</span>}
+          name="name"
+          rules={[{ required: true, message: "Введите ваше имя!" }]}
+        >
+          <Input
+            onChange={handleInputChange}
+            name="name"
+            value={formData.name}
+            style={{ fontSize: "20px", padding: "10px" }}
+          />
+        </Form.Item>
+        <Form.Item
+          label={<span style={{ fontSize: "20px" }}>Фамилия</span>}
+          name="lastname"
+          rules={[{ required: true, message: "Введите вашу фамилию!" }]}
+        >
+          <Input
+            onChange={handleInputChange}
+            name="lastname"
+            value={formData.lastname}
+            style={{ fontSize: "20px", padding: "10px" }}
+          />
+        </Form.Item>
+        <Form.Item
+          label={<span style={{ fontSize: "20px" }}>Логин</span>}
+          name="login"
+          rules={[{ required: true, message: "Введите ваш логин!" }]}
+        >
+          <Input
+            onChange={handleInputChange}
             name="login"
-            rules={[{ required: true, message: "Введите логин!" }]}
-          >
-            <Input
-              onChange={handleInputChange}
-              name="login"
-              value={formData.login}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Специальность"
-            name="specialty"
-            rules={[{ required: true, message: "Укажите вашу специальность!" }]}
-          >
-            <Input
-              onChange={handleInputChange}
-              name="specialty"
-              value={formData.specialty}
-            />
-          </Form.Item>
-        </>
-      )}
-      {userType === "patient" && (
-        <>
-          <Form.Item label="Аллергии" name="allergies">
-            <Input
-              onChange={handleInputChange}
-              name="allergies"
-              value={formData.allergies}
-            />
-          </Form.Item>
-          <Form.Item label="Возраст" name="age">
-            <Input
-              type="number"
-              onChange={handleInputChange}
+            value={formData.login}
+            style={{ fontSize: "20px", padding: "10px" }}
+          />
+        </Form.Item>
+        <Form.Item
+          label={<span style={{ fontSize: "20px" }}>Пароль</span>}
+          name="password"
+          rules={[{ required: true, message: "Введите ваш пароль!" }]}
+        >
+          <Input.Password
+            onChange={handleInputChange}
+            name="password"
+            value={formData.password}
+            style={{ fontSize: "20px", padding: "10px" }}
+          />
+        </Form.Item>
+        {userType === "doctor" && (
+          <>
+            <Form.Item
+              label={<span style={{ fontSize: "20px" }}>Специальность</span>}
+              name="speciality"
+              rules={[
+                { required: true, message: "Введите вашу специальность!" },
+              ]}
+            >
+              <Input
+                onChange={handleInputChange}
+                name="speciality"
+                value={formData.speciality}
+                style={{ fontSize: "20px", padding: "10px" }}
+              />
+            </Form.Item>
+            <Form.Item
+              label={<span style={{ fontSize: "20px" }}>Опыт</span>}
+              name="experience"
+              rules={[{ required: true, message: "Введите ваш опыт!" }]}
+            >
+              <Input
+                type="number"
+                onChange={handleInputChange}
+                name="experience"
+                value={formData.experience}
+                style={{ fontSize: "20px", padding: "10px" }}
+              />
+            </Form.Item>
+            <Form.Item
+              label={<span style={{ fontSize: "20px" }}>Специализация</span>}
+              name="specialization"
+              rules={[
+                { required: true, message: "Введите вашу специализацию!" },
+              ]}
+            >
+              <Input
+                onChange={handleInputChange}
+                name="specialization"
+                value={formData.specialization}
+                style={{ fontSize: "20px", padding: "10px" }}
+              />
+            </Form.Item>
+          </>
+        )}
+        {userType === "patient" && (
+          <>
+            <Form.Item
+              label={<span style={{ fontSize: "20px" }}>Возраст</span>}
               name="age"
-              value={formData.age}
-            />
-          </Form.Item>
-          <Form.Item label="Вес" name="weight">
-            <Input
-              type="number"
-              onChange={handleInputChange}
-              name="weight"
-              value={formData.weight}
-            />
-          </Form.Item>
-          <Form.Item label="Рост" name="height">
-            <Input
-              type="number"
-              onChange={handleInputChange}
-              name="height"
-              value={formData.height}
-            />
-          </Form.Item>
-        </>
-      )}
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Зарегистрироваться
-        </Button>
-      </Form.Item>
-    </Form>
+              rules={[{ required: true, message: "Введите ваш возраст!" }]}
+            >
+              <Input
+                type="number"
+                onChange={handleInputChange}
+                name="age"
+                value={formData.age}
+                style={{ fontSize: "20px", padding: "10px" }}
+              />
+            </Form.Item>
+            <Form.Item
+              label={<span style={{ fontSize: "20px" }}>Полис</span>}
+              name="policy"
+              rules={[{ required: true, message: "Введите ваш полис!" }]}
+            >
+              <Input
+                onChange={handleInputChange}
+                name="policy"
+                value={formData.policy}
+                style={{ fontSize: "20px", padding: "10px" }}
+              />
+            </Form.Item>
+          </>
+        )}
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{
+              fontSize: "20px",
+              padding: "10px 24px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            Зарегистрироваться
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
 export default RegistrationForm;
-

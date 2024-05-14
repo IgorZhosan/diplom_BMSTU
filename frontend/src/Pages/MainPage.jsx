@@ -1,17 +1,38 @@
-import React from "react";
-import { Button, Typography, Space } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Typography, Space, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export default function MainPage() {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const name = localStorage.getItem("name");
+    if (name) {
+      setUserName(name);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    navigate("/login");
+  };
 
   return (
-    <div style={{ padding: "50px", maxWidth: "600px", margin: "0 auto" }}>
-      <Title level={1} style={{ textAlign: "center", color: "#005a8d" }}>
-        Добро пожаловать!
-      </Title>
+    <div style={{ padding: "50px", maxWidth: "800px", margin: "0 auto" }}>
+      <Row gutter={[16, 16]} align="middle" justify="space-between">
+        <Col>
+          <Title level={1} style={{ color: "#005a8d" }}>
+            Добро пожаловать{userName && `, ${userName}`}!
+          </Title>
+        </Col>
+        <Col>
+          <Button type="primary" danger onClick={handleLogout}>
+            Выйти
+          </Button>
+        </Col>
+      </Row>
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
         <Button
           type="primary"
@@ -41,27 +62,3 @@ export default function MainPage() {
     </div>
   );
 }
-
-// import React from "react";
-// import { Button, Space, Row, Col, Typography, Divider } from "antd";
-// import { useNavigate } from "react-router-dom";
-
-// import { useAuth } from "../AuthProvider";
-
-// const { Title, Text } = Typography;
-
-// export default function MainPage() {
-//   const { isAuthenticated } = useAuth();
-//   const navigate = useNavigate();
-
-//   return (
-//     <>
-//       <Space direction="vertical" size="large" style={{ display: "flex" }}>
-//         <Title level={1}>Добро пожаловать!</Title>
-//         <Button onClick={() => {navigate("/analysis");}}>Analysis</Button>
-//         <Button onClick={() => {navigate("/start_fvd");}}>StartFVD</Button>
-//         <Button onClick={() => {navigate("/patient");}}>Patient</Button>
-//       </Space>
-//     </>
-//   );
-// }
