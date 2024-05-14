@@ -1,5 +1,5 @@
-import React, { useContext, useMemo } from "react";
-import { Typography, Divider, Collapse, Button, List, Empty } from "antd";
+import React, { useContext } from "react";
+import { Typography, Collapse, Button, List, Empty } from "antd";
 import { useNavigate } from "react-router-dom";
 import { PatientContext } from "./PatientContext";
 import {
@@ -21,23 +21,17 @@ const Analysis = () => {
   const { analysisHistory } = useContext(PatientContext);
   const navigate = useNavigate();
 
-  const generateChartData = () => {
+  const generateChartData = (itemData) => {
     let data = [];
     for (let i = 0; i <= 100; i++) {
       const time = i / 10;
       const expVolume = Math.exp(-time / 2) * 20 * Math.sin(time);
       const flowRate =
         -Math.exp(-time / 2) * (2 * Math.sin(time) + (20 * Math.cos(time)) / 2);
-      const MOS25 = expVolume * 0.25;
-      const MOS50 = expVolume * 0.5;
-      const MOS75 = expVolume * 0.75;
-      const SOC = flowRate * 1.5; // Примерная формула для СОС
-      data.push({ time, expVolume, flowRate, MOS25, MOS50, MOS75, SOC });
+      data.push({ time, expVolume, flowRate });
     }
     return data;
   };
-
-  const chartData = useMemo(() => generateChartData(), []);
 
   if (analysisHistory.length === 0) {
     return (
@@ -89,7 +83,7 @@ const Analysis = () => {
             />
             {renderMedicalAdvice(item.data)}
             <ResponsiveContainer width="100%" height={400}>
-              <ComposedChart data={chartData}>
+              <ComposedChart data={generateChartData(item.data)}>
                 <CartesianGrid stroke="#f5f5f5" />
                 <XAxis
                   dataKey="time"
@@ -135,34 +129,6 @@ const Analysis = () => {
                   stroke="#82ca9d"
                   name="Скорость потока"
                 />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="MOS25"
-                  stroke="#ffc658"
-                  name="МОС25"
-                />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="MOS50"
-                  stroke="#ff8042"
-                  name="МОС50"
-                />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="MOS75"
-                  stroke="#fa8072"
-                  name="МОС75"
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="SOC"
-                  stroke="#4661EE"
-                  name="СОС"
-                />
               </ComposedChart>
             </ResponsiveContainer>
           </Panel>
@@ -181,13 +147,16 @@ const Analysis = () => {
 
 function getNormalRange(parameter) {
   const ranges = {
-    ЖЕЛ: [4.8, 6.1],
-    ФЖЕЛ: [3.9, 4.9],
-    ОФВ1: [2.5, 3.5],
-    МОС25: [2.0, 3.4],
-    МОС50: [3.2, 4.8],
-    МОС75: [1.8, 2.8],
-    СОС: [4.5, 6.5],
+    FVC: [3.0, 5.0],
+    FEVL: [2.5, 4.0],
+    PEF: [4.0, 10.0],
+    ELA: [1.5, 3.5],
+    FEW25: [2.0, 4.0],
+    FEW50: [2.5, 5.0],
+    FEW75: [3.0, 6.0],
+    FET: [1.0, 3.0],
+    EVol: [1.0, 4.0],
+    FIVc: [2.0, 4.5],
   };
   return ranges[parameter] || [0, 100];
 }

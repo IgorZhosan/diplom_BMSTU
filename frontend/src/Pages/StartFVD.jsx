@@ -8,6 +8,10 @@ const StartFVD = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const generateRandomValue = (min, max) => {
+    return (Math.random() * (max - min) + min).toFixed(2);
+  };
+
   const startAnalysis = () => {
     setLoading(true);
     setTimeout(() => {
@@ -15,10 +19,16 @@ const StartFVD = () => {
       const result = {
         date: new Date().toISOString(),
         data: {
-          ЖЕЛ: Math.random() * 2 + 4,
-          ФЖЕЛ: Math.random() * 1 + 3,
-          ОФВ1: Math.random() * 1 + 2,
-          ПСВ: Math.random() * 2 + 5,
+          FVC: generateRandomValue(3.0, 5.0),
+          FEVL: generateRandomValue(2.5, 4.0),
+          PEF: generateRandomValue(4.0, 10.0),
+          ELA: generateRandomValue(1.5, 3.5),
+          FEW25: generateRandomValue(2.0, 4.0),
+          FEW50: generateRandomValue(2.5, 5.0),
+          FEW75: generateRandomValue(3.0, 6.0),
+          FET: generateRandomValue(1.0, 3.0),
+          EVol: generateRandomValue(1.0, 4.0),
+          FIVc: generateRandomValue(2.0, 4.5),
         },
       };
       addAnalysisResult(result);
