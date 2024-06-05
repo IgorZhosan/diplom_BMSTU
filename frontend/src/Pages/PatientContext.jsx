@@ -29,7 +29,10 @@ export const PatientProvider = ({ children }) => {
   };
 
   const addAnalysisResult = (result) => {
-    const newHistory = [...analysisHistory, result];
+    const newHistory = [
+      ...analysisHistory,
+      { ...result, snils: patientInfo.snils },
+    ];
     setAnalysisHistory(newHistory);
     localStorage.setItem("analysisHistory", JSON.stringify(newHistory));
   };

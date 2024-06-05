@@ -6,25 +6,9 @@ import { PatientContext } from "./PatientContext";
 const { Title, Paragraph } = Typography;
 
 const StartFVD = () => {
-  const { addAnalysisResult } = useContext(PatientContext);
+  const { patientInfo, addAnalysisResult } = useContext(PatientContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  const generateChartData = () => {
-    let data = [];
-    for (let i = 0; i <= 100; i++) {
-      const time = i / 10;
-      const expVolume = Math.exp(-time / 2) * 20 * Math.sin(time);
-      const flowRate =
-        -Math.exp(-time / 2) * (2 * Math.sin(time) + (20 * Math.cos(time)) / 2);
-      const MOS25 = expVolume * 0.25;
-      const MOS50 = expVolume * 0.5;
-      const MOS75 = expVolume * 0.75;
-      const SOC = flowRate * 1.5; // Примерная формула для СОС
-      data.push({ time, expVolume, flowRate, MOS25, MOS50, MOS75, SOC });
-    }
-    return data;
-  };
 
   const startAnalysis = () => {
     setLoading(true);
@@ -44,10 +28,11 @@ const StartFVD = () => {
           EVOl: Math.random() * 2 + 1,
           FIVc: Math.random() * 2 + 1,
         },
+        snils: patientInfo.snils, // Добавляем СНИЛС к результатам анализа
       };
       addAnalysisResult(result);
       message.success("Анализ ФВД завершен");
-      navigate("/analysis", { state: { chartData: generateChartData() } });
+      navigate("/analysis");
     }, 3000);
   };
 
