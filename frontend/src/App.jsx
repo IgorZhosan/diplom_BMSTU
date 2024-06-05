@@ -15,6 +15,9 @@ import StartFVD from "./Pages/StartFVD";
 import RegistrationForm from "./Pages/RegistrationForm";
 import LoginPage from "./Pages/LoginPage";
 import DoctorPage from "./Pages/DoctorPage";
+import ViewPatientHistory from "./Pages/ViewPatientHistory";
+import EditMedicalHistory from "./Pages/EditMedicalHistory";
+import AssignSpirometry from "./Pages/AssignSpirometry"; // Импортируем новый компонент
 
 const App = () => {
   return (
@@ -29,8 +32,18 @@ const App = () => {
             <Route path="/form" element={<PatientForm />} />
             <Route path="/patient" element={<PatientInfo />} />
             <Route path="/analysis" element={<Analysis />} />
+            <Route
+              path="/view-patient-history"
+              element={<ViewPatientHistory />}
+            />
             <Route path="/start_fvd" element={<StartFVD />} />
             <Route path="/doctor" element={<DoctorPage />} />
+            <Route
+              path="/edit-medical-history"
+              element={<EditMedicalHistory />}
+            />
+            <Route path="/assign-spirometry" element={<AssignSpirometry />} />{" "}
+            {/* Добавление маршрута */}
           </Routes>
         </Router>
       </PatientProvider>

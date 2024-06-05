@@ -1,14 +1,6 @@
-import React, { useContext, useMemo } from "react";
-import {
-  Typography,
-  Divider,
-  Collapse,
-  Button,
-  List,
-  Empty,
-  message,
-} from "antd";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { Typography, Divider, Collapse, Button, List, Empty } from "antd";
+import { useNavigate, useLocation } from "react-router-dom";
 import { PatientContext } from "./PatientContext";
 import {
   ResponsiveContainer,
@@ -22,30 +14,14 @@ import {
   Legend,
 } from "recharts";
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 const { Panel } = Collapse;
 
 const Analysis = () => {
   const { analysisHistory } = useContext(PatientContext);
   const navigate = useNavigate();
-
-  const generateChartData = () => {
-    let data = [];
-    for (let i = 0; i <= 100; i++) {
-      const time = i / 10;
-      const expVolume = Math.exp(-time / 2) * 20 * Math.sin(time);
-      const flowRate =
-        -Math.exp(-time / 2) * (2 * Math.sin(time) + (20 * Math.cos(time)) / 2);
-      const MOS25 = expVolume * 0.25;
-      const MOS50 = expVolume * 0.5;
-      const MOS75 = expVolume * 0.75;
-      const SOC = flowRate * 1.5; // Примерная формула для СОС
-      data.push({ time, expVolume, flowRate, MOS25, MOS50, MOS75, SOC });
-    }
-    return data;
-  };
-
-  const chartData = useMemo(() => generateChartData(), []);
+  const location = useLocation();
+  const chartData = location.state ? location.state.chartData : [];
 
   if (analysisHistory.length === 0) {
     return (

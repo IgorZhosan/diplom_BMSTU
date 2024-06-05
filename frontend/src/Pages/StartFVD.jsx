@@ -10,6 +10,22 @@ const StartFVD = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const generateChartData = () => {
+    let data = [];
+    for (let i = 0; i <= 100; i++) {
+      const time = i / 10;
+      const expVolume = Math.exp(-time / 2) * 20 * Math.sin(time);
+      const flowRate =
+        -Math.exp(-time / 2) * (2 * Math.sin(time) + (20 * Math.cos(time)) / 2);
+      const MOS25 = expVolume * 0.25;
+      const MOS50 = expVolume * 0.5;
+      const MOS75 = expVolume * 0.75;
+      const SOC = flowRate * 1.5; // Примерная формула для СОС
+      data.push({ time, expVolume, flowRate, MOS25, MOS50, MOS75, SOC });
+    }
+    return data;
+  };
+
   const startAnalysis = () => {
     setLoading(true);
     setTimeout(() => {
@@ -31,7 +47,7 @@ const StartFVD = () => {
       };
       addAnalysisResult(result);
       message.success("Анализ ФВД завершен");
-      navigate("/analysis");
+      navigate("/analysis", { state: { chartData: generateChartData() } });
     }, 3000);
   };
 

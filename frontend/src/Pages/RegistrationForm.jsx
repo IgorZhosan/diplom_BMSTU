@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Form, Input, Button, Select, message } from "antd";
+import { Form, Input, Select, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { PatientContext } from "./PatientContext";
@@ -52,13 +52,10 @@ const RegistrationForm = () => {
       message.error("Пожалуйста, заполните все обязательные поля.");
       return;
     }
-    // Сохранение данных в localStorage
-    localStorage.setItem("login", formData.login);
-    localStorage.setItem("password", formData.password);
-    localStorage.setItem("name", formData.name);
-    localStorage.setItem("lastname", formData.lastname);
 
-    // Сохранение данных пациента в контексте
+    registerUser({ ...formData });
+    message.success("Регистрация прошла успешно!");
+
     if (userType === "patient") {
       const patientInfo = {
         fullName: `${formData.name} ${formData.lastname}`,
@@ -67,11 +64,8 @@ const RegistrationForm = () => {
         allergies: "",
       };
       savePatientInfo(patientInfo);
-      localStorage.setItem("patientInfo", JSON.stringify(patientInfo));
     }
 
-    registerUser({ ...formData });
-    message.success("Регистрация прошла успешно!");
     setFormData({
       name: "",
       lastname: "",

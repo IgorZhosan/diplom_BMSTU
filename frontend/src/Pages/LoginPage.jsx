@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const { users } = useContext(UserContext);
   const [formData, setFormData] = useState({
     login: "",
     password: "",
@@ -16,12 +18,17 @@ const LoginPage = () => {
   };
 
   const handleSubmit = (values) => {
-    const storedLogin = localStorage.getItem("login");
-    const storedPassword = localStorage.getItem("password");
+    const user = users.find(
+      (user) => user.login === values.login && user.password === values.password
+    );
 
-    if (values.login === storedLogin && values.password === storedPassword) {
+    if (user) {
       message.success("Вход выполнен успешно!");
-      navigate("/main");
+      if (user.role === "doctor") {
+        navigate("/doctor");
+      } else {
+        navigate("/main");
+      }
     } else {
       message.error("Неправильный логин или пароль.");
     }
